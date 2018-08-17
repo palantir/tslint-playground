@@ -68,8 +68,10 @@
     "analyze": "source-map-explorer build/static/js/main.*",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build -m '[skip ci] Pushing to github-pages'"
+    "deploy": "gh-pages -d build -m '[skip ci] Pushing to github-pages'",
+    "deploy-ci": "gh-pages -d build -m '[skip ci] Pushing to github-pages'"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
@@ -117,12 +119,7 @@
       "json",
       "node",
       "mjs"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "/Users/johnwiseheart/projects/tslint-playground/tsconfig.test.json"
-      }
-    }
+    ]
   },
   "babel": {
     "presets": [
