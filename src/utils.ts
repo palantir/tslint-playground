@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import { isNil } from "lodash-es";
+import * as lzString from "lz-string";
 import * as monacoEditor from "monaco-editor";
 import { IConfigurationFile } from "tslint/lib/configuration";
 import { IOptions, RuleFailure } from "tslint/lib/language/rule/rule";
@@ -146,11 +148,27 @@ const convertToNewConfig = (oldConfig: IOptions | any[] | boolean): object => {
  * @param code the text from the code textbox
  * @param config the text from the config textbox
  */
-export const generateUrl = (code: string, config: string) => {
-  return `?code=${encodeURIComponent(code)}&config=${encodeURIComponent(
-    config
-  )}`;
+export const encodeUrl = (code: string, config: string) => {
+  const toCompress = JSON.stringify({ code, config });
+  const compressed = lzString.compressToEncodedURIComponent(toCompress);
+  return `?saved=${compressed}`;
 };
+
+export const decodeUrl = (url: string) => {
+  const urlParameters = new URLSearchParams(url);
+
+  if (urlParameters.has("saved")) {
+    const savedParameter = urlParameters.get("saved");
+    if (isNil(savedParameter)) {
+      return undefined;
+    }
+    const decompressed = lzString.decompressFromEncodedURIComponent(savedParameter);
+    return JSON.parse(decompressed);
+  }
+
+  return undefined;
+};
+
 
 /**
  * Convert a tslint failure to an aceeditor marker
