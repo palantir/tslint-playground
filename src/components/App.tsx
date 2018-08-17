@@ -18,6 +18,7 @@
 import { Alignment, Button, Intent, Navbar } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { flex1, flexRoot, margin, vertical } from "csstips";
+import { isNil } from "lodash-es";
 import * as React from "react";
 import * as CopyToClipboard from "react-copy-to-clipboard";
 import {
@@ -32,7 +33,7 @@ import { style } from "typestyle";
 import "../../node_modules/react-mosaic-component/react-mosaic-component.css";
 import { DEFAULT_CODE, DEFAULT_CONFIG } from "../config";
 import { BrowserLinter } from "../linter";
-import { failureToMarker, generateUrl } from "../utils";
+import { decodeUrl, encodeUrl, failureToMarker } from "../utils";
 import { CodeEditor } from "./CodeEditor";
 
 type WindowType = "code" | "config" | "output";
@@ -75,19 +76,13 @@ class App extends React.Component<{}, IAppState> {
     this.linter = new BrowserLinter();
 
     const { code } = this.state;
-    const urlParameters = new URLSearchParams(window.location.search);
-
-    if (urlParameters.has("config")) {
-      const configParameter = decodeURIComponent(
-        urlParameters.get("config") || ""
-      );
-      this.handleConfigChange(configParameter);
-    }
-
-    if (urlParameters.has("code")) {
-      const codeParameter = decodeURIComponent(urlParameters.get("code") || "");
-      this.handleCodeChange(codeParameter);
+    const parsedUrl = decodeUrl(window.location.search);
+    if (!isNil(parsedUrl)) {
+      const { code: urlCode, config: urlConfig } = parsedUrl;
+      this.handleConfigChange(urlConfig);
+      this.handleCodeChange(urlCode);
     } else {
+      // HACKHACK we have to trigger a code change to get errors to show up
       this.handleCodeChange(code);
     }
   }
@@ -157,7 +152,7 @@ class App extends React.Component<{}, IAppState> {
 
   private renderHeader = () => {
     const { config, code } = this.state;
-    const queryString = generateUrl(code, config);
+    const queryString = encodeUrl(code, config);
     const clipboardText = `${window.location.origin}${queryString}`;
 
     return (
@@ -180,11 +175,7 @@ class App extends React.Component<{}, IAppState> {
 
   private handleSaveToURL = () => {
     const { code, config } = this.state;
-    window.history.replaceState(
-      undefined,
-      undefined,
-      generateUrl(code, config)
-    );
+    window.history.replaceState(undefined, undefined, encodeUrl(code, config));
   };
 
   private renderOutput = () => {
