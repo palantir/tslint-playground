@@ -3,8 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:7.10
+
     steps:
       - checkout
+
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
@@ -67,6 +69,6 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: master
+    filters:
+      branches:
+        only: master
