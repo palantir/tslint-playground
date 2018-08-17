@@ -26,6 +26,7 @@ jobs:
       - persist_to_workspace:
           root: '.'
           paths:
+            - node_modules
             - build
             - yarn.lock
 
@@ -40,10 +41,9 @@ jobs:
           at: '.'
 
       - restore_cache:
-          key:
+          keys:
             - dependency-cache-{{ checksum "yarn.lock" }}
             - dependency-cache-
-
       - run: yarn test
 
   deploy:
@@ -57,7 +57,7 @@ jobs:
           at: '.'
 
       - restore_cache:
-          key:
+          keys:
             - dependency-cache-{{ checksum "yarn.lock" }}
             - dependency-cache-
 
