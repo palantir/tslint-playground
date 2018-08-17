@@ -2,16 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:latest
 
     steps:
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - dependency-cache-{{ checksum "yarn.lock" }}
+          - dependency-cache-
 
       - run:
           name: Install dependencies
@@ -20,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "yarn.lock" }}
 
       - run: yarn build
 
@@ -32,27 +31,40 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:latest
+
     steps:
       - checkout
+
       - attach_workspace:
           at: '.'
+
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache-
+
       - run: yarn test
 
   deploy:
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:latest
+
     steps:
       - checkout
+
       - attach_workspace:
           at: '.'
+
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache-
+
       - add_ssh_keys:
           fingerprints:
             - "fb:30:a4:41:71:38:18:6f:11:eb:10:c4:f3:b8:07:ac"
+
       - run: yarn deploy-ci
 
 workflows:
