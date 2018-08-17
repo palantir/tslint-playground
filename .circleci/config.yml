@@ -5,6 +5,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      ignore:
+        - gh-pages
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
@@ -33,11 +36,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run:
-          name: Deploy
-          command: yarn deploy
-          environment:
-            # There are tests which are annoying
-            CI: false
+      - add_ssh_keys:
+          fingerprints:
+            - "fb:30:a4:41:71:38:18:6f:11:eb:10:c4:f3:b8:07:ac"
 
+      - run:
+          name: Deploy to gh-pages
+          command: yarn deploy
