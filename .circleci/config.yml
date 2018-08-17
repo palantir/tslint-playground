@@ -35,6 +35,8 @@ jobs:
 
 
   deploy-job:
+    machine:
+        enabled: true
     working_directory: ~/repo
     steps:
       - checkout
