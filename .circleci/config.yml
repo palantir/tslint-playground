@@ -57,18 +57,15 @@ jobs:
 
 workflows:
   version: 2
-  build_test:
+  build_test_deploy:
     jobs:
       - build
       - test:
           requires:
             - build
-  build_deploy:
-    jobs:
-      - build
       - deploy:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: master
