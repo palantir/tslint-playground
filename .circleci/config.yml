@@ -42,4 +42,4 @@ jobs:
 
       - run:
           name: Deploy to gh-pages
-          command: yarn deploy-ci
+          command: yarn deploy
