@@ -78,7 +78,7 @@ class App extends React.Component<{}, IAppState> {
     const { code } = this.state;
     const parsedUrl = decodeUrl(window.location.search);
     if (!isNil(parsedUrl)) {
-    const { code: urlCode, config: urlConfig} = parsedUrl;
+      const { code: urlCode, config: urlConfig } = parsedUrl;
       this.handleConfigChange(urlConfig);
       this.handleCodeChange(urlCode);
     } else {
@@ -175,11 +175,7 @@ class App extends React.Component<{}, IAppState> {
 
   private handleSaveToURL = () => {
     const { code, config } = this.state;
-    window.history.replaceState(
-      undefined,
-      undefined,
-      encodeUrl(code, config)
-    );
+    window.history.replaceState(undefined, undefined, encodeUrl(code, config));
   };
 
   private renderOutput = () => {
