@@ -33,8 +33,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-
-  deploy-job:
+  deploy:
     machine:
         enabled: true
     working_directory: ~/repo
