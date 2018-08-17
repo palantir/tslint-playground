@@ -162,13 +162,14 @@ export const decodeUrl = (url: string) => {
     if (isNil(savedParameter)) {
       return undefined;
     }
-    const decompressed = lzString.decompressFromEncodedURIComponent(savedParameter);
+    const decompressed = lzString.decompressFromEncodedURIComponent(
+      savedParameter
+    );
     return JSON.parse(decompressed);
   }
 
   return undefined;
 };
-
 
 /**
  * Convert a tslint failure to an aceeditor marker
