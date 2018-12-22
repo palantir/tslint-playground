@@ -11,6 +11,7 @@ A playground for testing [tslint](https://github.com/palantir/tslint) configurat
 
 ## Not included yet
 
+- :clock1: Rules which require typing
 - :clock1: Custom imports
 - :clock1: Custom rules
 
